@@ -46,16 +46,16 @@ const employees = [
   },
 ];
 
-// const filterEmployees = employees.filter((employee)=>{
-//   const {email, phoneNumber}= employees;
-//  return employee.email || employee.phoneNumber ;
+const filterEmployees = employees.filter((employee)=>{
+  const {email, phoneNumber}= employees;
+ return employee.email || employee.phoneNumber ;
 
-// })
-// console.log(filterEmployees);
+})
+console.log(filterEmployees);
 
-const upContactInfo = employees.map((employee)=>{
-    if(employee.email ===null){
-        employee.email = `${employee.id}_${employee.position.toLowerCase()}@gmail.com`
+const upContactInfo = filterEmployees.map((employee)=>{
+    if(email= employees ){
+        employee.email = `${employee.id}_${employee.position.toLowerCase()}@company.com`
        }
      return employee;
 })
