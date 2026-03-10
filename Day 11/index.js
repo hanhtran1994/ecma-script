@@ -46,8 +46,17 @@ const employees = [
   },
 ];
 
-const realEmployees = employees.filter((employee)=>{
-  return employee.email !== null || employee.phoneNumber !==null ;
+// const filterEmployees = employees.filter((employee)=>{
+//   const {email, phoneNumber}= employees;
+//  return employee.email || employee.phoneNumber ;
 
+// })
+// console.log(filterEmployees);
+
+const upContactInfo = employees.map((employee)=>{
+    if(employee.email ===null){
+        employee.email = `${employee.id}_${employee.position.toLowerCase()}@gmail.com`
+       }
+     return employee;
 })
-console.log(realEmployees);
+ console.log(upContactInfo)
