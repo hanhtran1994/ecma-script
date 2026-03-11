@@ -54,9 +54,27 @@ const filterEmployees = employees.filter((employee)=>{
 console.log(filterEmployees);
 
 const upContactInfo = filterEmployees.map((employee)=>{
-    if(email= employees ){
-        employee.email = `${employee.id}_${employee.position.toLowerCase()}@company.com`
-       }
-     return employee;
-})
- console.log(upContactInfo)
+    const {email,id,position}= employee;
+  
+     return email
+     ? employee
+     :{...employee, email:`${id}_${position.toLowerCase()}@company.com`};
+});
+ console.log(upContactInfo);
+
+ const totalSalary= employees.reduce((sum,employee)=>{
+    return sum + employee.salary;
+},0);
+ const avgSalary = totalSalary / employees.length;
+
+ console.log(avgSalary.toLocaleString());
+
+ const higherSalary = employees.filter((employee)=>{
+    return employee.salary > avgSalary
+ });
+  console.log(higherSalary);
+
+  const lowerSalary = employees.filter((employee)=>{
+    return employee.salary < avgSalary
+  });
+   console.log(lowerSalary);
