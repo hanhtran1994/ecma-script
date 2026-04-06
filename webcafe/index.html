@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebCafe - Trang Web Bán Cà Phê</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #FFFFFF;
+        }
+        header {
+            background: linear-gradient(135deg, #007BFF, #E3F2FD);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        nav ul li {
+            margin-left: 30px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #B3D9FF;
+        }
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+            margin-left: 30px;
+        }
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #FF5722;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.8rem;
+        }
+        .hero {
+            background: url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 2s ease-out;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+        .btn {
+            background: #007BFF;
+            color: #333;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        .btn:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+        section {
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .products {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 40px;
+            margin-top: -50px;
+            position: relative;
+            z-index: 10;
+        }
+        .products h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #007BFF;
+            font-size: 2.5rem;
+        }
+        .product-category {
+            margin-bottom: 50px;
+        }
+        .product-category h3 {
+            color: #007BFF;
+            font-size: 2rem;
+            margin-bottom: 25px;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        .product {
+            min-width: 250px;
+            margin: 0 15px;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            position: relative;
+        }
+        .product:hover {
+            transform: translateY(-10px);
+        }
+        .product-tag {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .product-tag.drink {
+            background: #007BFF;
+        }
+        .product-tag.food {
+            background: #FF9800;
+        }
+        .product img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .product-content {
+            padding: 20px;
+        }
+        .product-options {
+            display: grid;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .product-options label {
+            display: block;
+            font-size: 0.95rem;
+            color: #555;
+        }
+        .product-options select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .cart-item button {
+            background: #f44336;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 0.85rem;
+        }
+        .cart-item button:hover {
+            background: #d32f2f;
+        }
+        .product h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .product p {
+            margin-bottom: 15px;
+            color: #666;
+        }
+        .price {
+            font-weight: bold;
+            color: #007BFF;
+            font-size: 1.2rem;
+        }
+        .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            border-radius: 50%;
+        }
+        .prev {
+            left: 10px;
+        }
+        .next {
+            right: 10px;
+        }
+        .prev:hover, .next:hover {
+            background: rgba(0,0,0,0.8);
+        }
+        .about {
+            background: linear-gradient(135deg, #007BFF, #E3F2FD);
+            color: white;
+            text-align: center;
+        }
+        .about h2 {
+            margin-bottom: 20px;
+        }
+        .about-details {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+        .detail {
+            text-align: center;
+            max-width: 300px;
+            margin: 20px;
+        }
+        .detail i {
+            font-size: 3rem;
+            color: #007BFF;
+            margin-bottom: 10px;
+        }
+        .detail h3 {
+            margin-bottom: 10px;
+            color: white;
+        }
+        .detail p {
+            color: #f0f0f0;
+        }
+        .image-gallery {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .image-gallery h3 {
+            margin-bottom: 20px;
+            color: white;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .gallery-grid img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+        .gallery-grid img:hover {
+            transform: scale(1.05);
+        }
+        .contact {
+            background: white;
+        }
+        .contact h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #4CAF50;
+        }
+        .contact-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .contact-form input,
+        .contact-form textarea {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .contact-form textarea {
+            grid-column: span 2;
+        }
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        footer a {
+            color: #FFC107;
+            text-decoration: none;
+        }
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .contact-form {
+                grid-template-columns: 1fr;
+            }
+            .contact-form textarea {
+                grid-column: span 1;
+            }
+        }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: black;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .cart-total {
+            margin: 20px 0;
+            text-align: right;
+        }
+        #checkout-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        #checkout-form input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">WebCafe</div>
+            <ul>
+                <li><a href="#home">Trang Chủ</a></li>
+                <li><a href="#products">Sản Phẩm</a></li>
+                <li><a href="#about">Về Chúng Tôi</a></li>
+                <li><a href="#contact">Liên Hệ</a></li>
+            </ul>
+            <div class="cart-icon" onclick="toggleCart()">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cart-count">0</span>
+            </div>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Chào Mừng Đến Với WebCafe</h1>
+            <p>Trải Nghiệm Hương Vị Cà Phê Tinh Tế, Năng Động Và Tích Cực</p>
+            <a href="#products" class="btn">Khám Phá Sản Phẩm</a>
+        </div>
+    </section>
+
+    <section id="products" class="products">
+        <h2>Sản Phẩm Của Chúng Tôi</h2>
+        <div class="product-category">
+            <h3>Đồ Uống</h3>
+            <div class="product-grid">
+                <div class="product">
+                    <div class="product-tag drink">Đồ Uống</div>
+                    <img src="https://oola.vn/wp-content/uploads/2023/03/ca-phe-den.jpg" alt="Cà Phê Đen">
+                    <div class="product-content">
+                        <h3>Cà Phê Đen</h3>
+                        <p>Hương vị đậm đà, tinh tế từ hạt cà phê nguyên chất.</p>
+                        <div class="price">50.000 VND</div>
+                        <button class="btn add-to-cart" data-name="Cà Phê Đen" data-price="50000" data-category="drink">Thêm vào Giỏ</button>
+                    </div>
+                </div>
+                <div class="product">
+                    <div class="product-tag drink">Đồ Uống</div>
+                    <img src="https://cubes-asia.com/storage/blogs/2024-12/5-cach-pha-ca-phe-sua-tuoi-khong-duong-co.jpeg" alt="Cà Phê Sữa">
+                    <div class="product-content">
+                        <h3>Cà Phê Sữa</h3>
+                        <p>Kết hợp hoàn hảo giữa cà phê và sữa tươi ngon.</p>
+                        <div class="price">60.000 VND</div>
+                        <button class="btn add-to-cart" data-name="Cà Phê Sữa" data-price="60000" data-category="drink">Thêm vào Giỏ</button>
+                    </div>
+                </div>
+                <div class="product">
+                    <div class="product-tag drink">Đồ Uống</div>
+                    <img src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Cà Phê Latte">
+                    <div class="product-content">
+                        <h3>Cà Phê Latte</h3>
+                        <p>Mềm mại, thơm ngon với lớp foam kem mịn.</p>
+                        <div class="price">70.000 VND</div>
+                        <button class="btn add-to-cart" data-name="Cà Phê Latte" data-price="70000" data-category="drink">Thêm vào Giỏ</button>
+                    </div>
+                </div>
+                <div class="product">
+                    <div class="product-tag drink">Đồ Uống</div>
+                    <img src="https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Cà Phê Cappuccino">
+                    <div class="product-content">
+                        <h3>Cà Phê Cappuccino</h3>
+                        <p>Cân bằng giữa espresso, sữa và bột cacao.</p>
+                        <div class="price">75.000 VND</div>
+                        <button class="btn add-to-cart" data-name="Cà Phê Cappuccino" data-price="75000" data-category="drink">Thêm vào Giỏ</button>
+                    </div>
+                </div>
+                <div class="product">
+                    <div class="product-tag drink">Đồ Uống</div>
+                    <img src="https://images.unsplash.com/photo-1459755486867-b55449bb39ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Espresso">
+                    <div class="product-content">
+                        <h3>Espresso</h3>
+                        <p>Shot espresso mạnh mẽ, đậm đà hương vị.</p>
+                        <div class="price">45.000 VND</div>
+                        <button class="btn add-to-cart" data-name="Espresso" data-price="45000" data-category="drink">Thêm vào Giỏ</button>
+                    </div>
+                </div>
+                <div class="product">
+                    <div class="product-tag drink">Đồ Uống</div>
+                    <img src="https://ichef.bbci.co.uk/food/ic/food_16x9_1600/recipes/the_perfect_mocha_coffee_29100_16x9.jpg" alt="Mocha">
+                    <div class="product-content">
+                        <h3>Mocha</h3>
+                        <p>Cà phê kết hợp với sô-cô-la, ngọt ngào và phong phú.</p>
+                        <div class="price">80.000 VND</div>
+                        <button class="btn add-to-cart" data-name="Mocha" data-price="80000" data-category="drink">Thêm vào Giỏ</button>
+                    </div>
+                </div>
+                <div class="product">
+                    <div class="product-tag drink">Đồ Uống</div>
+                    <img src="https://images.unsplash.com/photo-1559496417-e7f25cb247f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Americano">
+                    <div class="product-content">
+                        <h3>Americano</h3>
+                        <p>Espresso pha loãng với nước nóng, nhẹ nhàng hơn.</p>
+                        <div class="price">55.000 VND</div>
+                        <button class="btn add-to-cart" data-name="Americano" data-price="55000" data-category="drink">Thêm vào Giỏ</button>
+                    </div>
+                </div>
+                <div class="product">
+                    <div class="product-tag drink">Đồ Uống</div>
+                    <img src="https://chaoech.com/uploads/source/menu/nuoc/nuoc-tinh-khiet-aquafina-500ml-chai.jpg" alt="Nước Suối">
+                    <div class="product-content">
+                        <h3>Nước Suối</h3>
+                        <p>Nước suối tinh khiết, mát lạnh, tốt cho sức khỏe.</p>
+                        <div class="price">15.000 VND</div>
+                        <button class="btn add-to-cart" data-name="Nước Suối" data-price="15000" data-category="drink">Thêm vào Giỏ</button>
+                    </div>
+                </div>
+                <div class="product">
+                    <div class="product-tag drink">Đồ Uống</div>
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbm0p2XzRb_4Ny2L0A3SEP9n4lxtOCVvXodQ&s" alt="Nước Chanh">
+                    <div class="product-content">
+                        <h3>Nước Chanh</h3>
+                        <p>Nước chanh tươi mát, giải khát hoàn hảo.</p>
+                        <div class="price">30.000 VND</div>
+                        <button class="btn add-to-cart" data-name="Nước Chanh" data-price="30000" data-category="drink">Thêm vào Giỏ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="product-category">
+            <h3>Thức Ăn</h3>
+            <div class="product-grid">
+                <div class="product">
+                    <div class="product-tag food">Thức Ăn</div>
+                    <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Bánh Kem">
+                    <div class="product-content">
+                        <h3>Bánh Kem</h3>
+                        <p>Bánh kem tươi ngon, mềm mại và ngọt ngào.</p>
+                        <div class="price">85.000 VND</div>
+                        <button class="btn add-to-cart" data-name="Bánh Kem" data-price="85000" data-category="food">Thêm vào Giỏ</button>
+                    </div>
+                </div>
+                <div class="product">
+                    <div class="product-tag food">Thức Ăn</div>
+                    <img src="https://cdn2.fptshop.com.vn/unsafe/1920x0/filters:quality(75)/banh_mi_man_3051eb6d27.jpg" alt="Bánh Mỳ">
+                    <div class="product-content">
+                        <h3>Bánh Mỳ</h3>
+                        <p>Bánh mỳ giòn vàng, thơm phức hợp cùng cà phê.</p>
+                        <div class="price">35.000 VND</div>
+                        <button class="btn add-to-cart" data-name="Bánh Mỳ" data-price="35000" data-category="food">Thêm vào Giỏ</button>
+                    </div>
+                </div>
+                <div class="product">
+                    <div class="product-tag food">Thức Ăn</div>
+                    <img src="https://daylambanh.edu.vn/wp-content/uploads/2017/09/banh-donut-phu-socola-ngot-ngao.jpg" alt="Bánh Donut">
+                    <div class="product-content">
+                        <h3>Bánh Donut</h3>
+                        <p>Bánh donut mềm, ngọt ngào với nhiều loại nhân.</p>
+                        <div class="price">45.000 VND</div>
+                        <button class="btn add-to-cart" data-name="Bánh Donut" data-price="45000" data-category="food">Thêm vào Giỏ</button>
+                    </div>
+                </div>
+                <div class="product">
+                    <div class="product-tag food">Thức Ăn</div>
+                    <img src="https://www.huongnghiepaau.com/wp-content/uploads/2019/01/banh-muffin-vani.jpg" alt="Bánh Muffin">
+                    <div class="product-content">
+                        <h3>Bánh Muffin</h3>
+                        <p>Bánh muffin mềm, hương vị bơ và trái cây tươi.</p>
+                        <div class="price">55.000 VND</div>
+                        <button class="btn add-to-cart" data-name="Bánh Muffin" data-price="55000" data-category="food">Thêm vào Giỏ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <h2>Về Chúng Tôi</h2>
+        <p>WebCafe mang đến cho bạn trải nghiệm cà phê tuyệt vời nhất. Chúng tôi sử dụng hạt cà phê chất lượng cao, rang xay tươi mỗi ngày để đảm bảo hương vị tinh tế. Hãy đến với chúng tôi để cảm nhận năng lượng tích cực từ mỗi tách cà phê!</p>
+        <div class="about-details">
+            <div class="detail">
+                <i class="fas fa-map-marker-alt"></i>
+                <h3>Địa Chỉ</h3>
+                <p>123 Đường ABC, Quận 1, TP.HCM, Việt Nam</p>
+            </div>
+            <div class="detail">
+                <i class="fas fa-clock"></i>
+                <h3>Giờ Hoạt Động</h3>
+                <p>Thứ 2 - Chủ Nhật: 7:00 AM - 10:00 PM</p>
+            </div>
+            <div class="detail">
+                <i class="fas fa-gift"></i>
+                <h3>Ưu Đãi</h3>
+                <p>Giảm 20% cho đơn hàng đầu tiên! Mua 2 tặng 1 vào cuối tuần.</p>
+            </div>
+        </div>
+        <div class="image-gallery">
+            <h3>Hình Ảnh Cà Phê</h3>
+            <div class="gallery-grid">
+                <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Cà Phê 2">
+                <img src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Cà Phê 3">
+                <img src="https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Cà Phê 4">
+                <img src="https://images.unsplash.com/photo-1459755486867-b55449bb39ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Cà Phê 5">
+                <img src="https://images.unsplash.com/photo-1559496417-e7f25cb247f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Cà Phê 6">
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <h2>Liên Hệ Với Chúng Tôi</h2>
+        <form class="contact-form">
+            <input type="text" placeholder="Tên của bạn" required>
+            <input type="email" placeholder="Email" required>
+            <textarea placeholder="Tin nhắn" rows="5" required></textarea>
+            <button type="submit" class="btn" style="grid-column: span 2;">Gửi Tin Nhắn</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>&copy; 2023 WebCafe. Tất cả quyền được bảo lưu. | <a href="#"><i class="fab fa-facebook"></i></a> <a href="#"><i class="fab fa-instagram"></i></a> <a href="#"><i class="fab fa-twitter"></i></a></p>
+    </footer>
+
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="toggleCart()">&times;</span>
+            <h2>Giỏ Hàng</h2>
+            <div id="cart-items"></div>
+            <div class="cart-total">
+                <strong>Tổng: <span id="cart-total">0 VND</span></strong>
+            </div>
+            <button class="btn" onclick="checkout()">Thanh Toán</button>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="toggleCheckout()">&times;</span>
+            <h2>Thanh Toán</h2>
+            <form id="checkout-form">
+                <input type="text" placeholder="Tên" required>
+                <input type="email" placeholder="Email" required>
+                <input type="text" placeholder="Địa chỉ" required>
+                <input type="text" placeholder="Số điện thoại" required>
+                <button type="submit" class="btn">Xác Nhận Thanh Toán</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+
+        // Cart functions
+        function addToCart(name, price) {
+            const existing = cart.find(item => item.name === name && item.sweetness === currentOptions.sweetness && item.ice === currentOptions.ice);
+            if (existing) {
+                existing.quantity++;
+            } else {
+                cart.push({ name, price: parseInt(price), quantity: 1, sweetness: currentOptions.sweetness, ice: currentOptions.ice });
+            }
+            updateCart();
+            document.getElementById('cart-modal').style.display = 'block';
+        }
+
+        function updateCart() {
+            const cartCount = document.getElementById('cart-count');
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+            cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartItems.innerHTML = '';
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price * item.quantity;
+                const optionsLabel = item.sweetness && item.ice ? ` (${item.sweetness}, ${item.ice})` : '';
+                const label = `${item.name}${optionsLabel}`;
+                cartItems.innerHTML += `
+                    <div class="cart-item">
+                        <div class="cart-item-details">
+                            <span>${label}</span>
+                            <div class="cart-item-controls">
+                                <button type="button" onclick="decreaseQuantity(${index})">-</button>
+                                <span>${item.quantity}</span>
+                                <button type="button" onclick="increaseQuantity(${index})">+</button>
+                            </div>
+                        </div>
+                        <span>${(item.price * item.quantity).toLocaleString()} VND</span>
+                        <button type="button" onclick="removeFromCart(${index})">Xóa</button>
+                    </div>
+                `;
+            });
+            cartTotal.textContent = total.toLocaleString() + ' VND';
+        }
+
+        function toggleCart() {
+            const modal = document.getElementById('cart-modal');
+            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function toggleCheckout() {
+            const modal = document.getElementById('checkout-modal');
+            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function checkout() {
+            toggleCart();
+            toggleCheckout();
+        }
+
+        function isDrinkProduct(product) {
+            return product.querySelector('.btn.add-to-cart')?.dataset.category === 'drink';
+        }
+
+        function isWaterProduct(product) {
+            return product.querySelector('.btn.add-to-cart')?.dataset.name === 'Nước Suối';
+        }
+
+        function getProductOptions(product) {
+            if (!isDrinkProduct(product)) {
+                return { sweetness: '', ice: '' };
+            }
+            const ice = product.querySelector('.ice-select')?.value || 'Đá bình thường';
+            const sweetness = isWaterProduct(product) ? '' : product.querySelector('.sweetness-select')?.value || 'Ngọt bình thường';
+            return { sweetness, ice };
+        }
+
+        function insertProductOptions() {
+            document.querySelectorAll('.product').forEach(product => {
+                if (!isDrinkProduct(product)) return;
+                if (product.querySelector('.product-options')) return;
+                const options = document.createElement('div');
+                options.className = 'product-options';
+                const hasSweetness = !isWaterProduct(product);
+                options.innerHTML = `
+                    ${hasSweetness ? `
+                        <div>
+                            <label>Độ ngọt</label>
+                            <select class="sweetness-select">
+                                <option value="Ngọt bình thường">Ngọt bình thường</option>
+                                <option value="25%">25%</option>
+                                <option value="50%">50%</option>
+                                <option value="75%">75%</option>
+                            </select>
+                        </div>
+                    ` : ''}
+                    <div>
+                        <label>Đá</label>
+                        <select class="ice-select">
+                            <option value="Đá bình thường">Đá bình thường</option>
+                            <option value="Ít đá">Ít đá</option>
+                            <option value="Không đá">Không đá</option>
+                        </select>
+                    </div>
+                `;
+                const button = product.querySelector('.btn.add-to-cart');
+                button.parentNode.insertBefore(options, button);
+            });
+        }
+
+        let currentOptions = { sweetness: 'Ngọt bình thường', ice: 'Đá bình thường' };
+
+        insertProductOptions();
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        function increaseQuantity(index) {
+            cart[index].quantity++;
+            updateCart();
+        }
+
+        function decreaseQuantity(index) {
+            if (cart[index].quantity > 1) {
+                cart[index].quantity--;
+            } else {
+                removeFromCart(index);
+                return;
+            }
+            updateCart();
+        }
+
+        // Event listeners for add to cart buttons
+        document.querySelectorAll('.add-to-cart').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const product = btn.closest('.product');
+                const name = btn.getAttribute('data-name');
+                const price = btn.getAttribute('data-price');
+                currentOptions = getProductOptions(product);
+                addToCart(name, price);
+            });
+        });
+
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const cartModal = document.getElementById('cart-modal');
+            const checkoutModal = document.getElementById('checkout-modal');
+            if (event.target === cartModal) {
+                cartModal.style.display = 'none';
+            }
+            if (event.target === checkoutModal) {
+                checkoutModal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
